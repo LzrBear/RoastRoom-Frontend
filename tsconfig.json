@@ -1,0 +1,15 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "target": "ESNext",
+    "jsx": "preserve",
+    "useDefineForClassFields": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"]
+}
