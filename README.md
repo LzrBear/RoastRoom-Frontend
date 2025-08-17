@@ -2,7 +2,7 @@
 
 This is the frontend for RoastRoom, built with Vue.js and Vite.
 
-![Frontend Build](https://github.com/LzrBear/RoastRoom-Frontend/actions/workflows/frontend-build.yml/badge.svg?branch=main)
+![Frontend Build](https://github.com/LzrBear/RoastRoom-Frontend/actions/workflows/frontend-build.yml/badge.svg?branch=master)
 
 ## Getting Started
 
