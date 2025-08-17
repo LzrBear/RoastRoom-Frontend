@@ -1,16 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api', // your backend URL
+  baseURL: '/api',
   withCredentials: true
 });
-
-export const apiAuth = {
-  register: (username: string, password: string) =>
-    api.post('/auth/register', { username, password }),
-  login: (username: string, password: string) =>
-    api.post('/auth/login', { username, password })
-};
 
 export const apiPosts = {
   getAll: () => api.get('/posts'),
