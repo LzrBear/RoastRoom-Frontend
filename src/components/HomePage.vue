@@ -19,54 +19,29 @@
     </div>
 
     <!-- Posts List -->
-    <div v-for="post in posts" :key="post.id" class="card mb-3 shadow-sm">
-      <div class="card-body">
-        <p class="card-text">{{ post.content }}</p>
-        <p class="text-muted mb-2">By: {{ post.authorName }}</p>
-
-        <!-- Rating Buttons -->
-        <button class="btn btn-success btn-sm me-2" @click="upvote(post.id)">
-          <i class="bi bi-hand-thumbs-up"></i> Upvote
-        </button>
-        <button class="btn btn-danger btn-sm me-2" @click="downvote(post.id)">
-          <i class="bi bi-hand-thumbs-down"></i> Downvote
-        </button>
-
-        <!-- Comments -->
-        <div class="mt-3">
-          <h6>Comments</h6>
-          <div v-for="comment in post.comments" :key="comment.id" class="border rounded p-2 mb-2">
-            <p class="mb-1">{{ comment.content }}</p>
-            <small class="text-muted">By: {{ comment.authorName }}</small>
-          </div>
-
-          <!-- Add Comment -->
-          <div class="input-group mb-2">
-            <input v-model="commentInputs[post.id]" type="text" class="form-control" placeholder="Add a comment"/>
-            <button class="btn btn-outline-primary" @click="submitComment(post.id)">
-              <i class="bi bi-reply"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <PostCard
+      v-for="post in posts"
+      :key="post.id"
+      :post="post"
+      @rate="ratePost"
+      @comment="addComment"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
-import { usePostStore } from '../stores/postStore';
+import { usePostStore } from '../store/postStore';
+import PostCard from './PostCard.vue';
 
 export default defineComponent({
+  components: { PostCard },
   setup() {
     const postStore = usePostStore();
     const newPostContent = reactive('');
     const newPostAuthor = reactive('');
-    const commentInputs: Record<number, string> = reactive({});
 
-    onMounted(() => {
-      postStore.fetchPosts();
-    });
+    onMounted(() => postStore.fetchPosts());
 
     const submitPost = () => {
       if (!newPostContent || !newPostAuthor) return;
@@ -75,37 +50,22 @@ export default defineComponent({
       newPostAuthor.value = '';
     };
 
-    const submitComment = (postId: number) => {
-      const content = commentInputs[postId];
-      if (!content) return;
+    const ratePost = (postId: number, isUpvote: boolean) => {
+      postStore.ratePost(postId, isUpvote, 'Anonymous');
+    };
+
+    const addComment = (postId: number, content: string) => {
       postStore.addComment(postId, content, 'Anonymous');
-      commentInputs[postId] = '';
-    };
-
-    const upvote = (postId: number) => {
-      postStore.ratePost(postId, true, 'Anonymous');
-    };
-
-    const downvote = (postId: number) => {
-      postStore.ratePost(postId, false, 'Anonymous');
     };
 
     return {
       posts: postStore.posts,
       newPostContent,
       newPostAuthor,
-      commentInputs,
       submitPost,
-      submitComment,
-      upvote,
-      downvote
+      ratePost,
+      addComment
     };
   }
 });
 </script>
-
-<style scoped>
-.card {
-  border-radius: 0.75rem;
-}
-</style>
